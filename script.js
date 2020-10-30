@@ -32,7 +32,7 @@ var questions = [
         correctAnswer: "JSON"
     },
     {
-        questionItem: "he link element must go inside the ____ section of an HTML document or page.",
+        questionItem: "Link element must go inside the ____ section of an HTML document or page.",
         choices: ["Footer", "Body", "Head", "Paragraph"],
         correctAnswer: "Head"
     },
@@ -61,7 +61,7 @@ var questions = [
 ];
 
 var remainingTime = 100;
-var holdInterval = 0;
+var interval = 0;
 var penalty = 10;
 var score = 0;
 var questionIndex = 0;
@@ -69,14 +69,14 @@ var ulEl = document.createElement("ul");
 
 
 startQuiz.addEventListener("click", function () {
-    // We are checking zero because its originally set to zero
-    if (holdInterval === 0) {
-        holdInterval = setInterval(function () {
+
+    if (interval === 0) {
+        interval = setInterval(function () {
             remainingTime--;
             timer.textContent = "Time: " + remainingTime;
-            if (secondsLeft <= 0) {
-                clearInterval(holdInterval);
-                allDone();
+            if (remainingTime <= 0) {
+                clearInterval(interval);
+                endQuiz();
             }
         }, 1000);
     }
@@ -84,50 +84,111 @@ startQuiz.addEventListener("click", function () {
 });
 
 function showQuestions(questionIndex) {
-    // Clears existing data 
     startPage.innerHTML = "";
     ulEl.innerHTML = "";
-    // For loops to loop through all info in array
     for (var i = 0; i < questions.length; i++) {
-        // Appends question title only
         startPage.textContent = questions[questionIndex].questionItem;
     }
-    // New for each for question choices
     questions[questionIndex].choices.forEach(function (nextQ) {
         var liEl = document.createElement("li");
         liEl.textContent = nextQ;
         startPage.appendChild(ulEl);
         ulEl.appendChild(liEl);
-        liEl.addEventListener("click", (compare));
+        liEl.addEventListener("click", (checkAnswer));
     })
 }
 
-function compare(event) {
-    var element = event.target;
-
-    if (element.matches("li")) {
-        var createDiv = document.createElement("div");
-        createDiv.setAttribute("id", "createDiv");
-        // Correct condition 
-        if (element.textContent == questions[questionIndex].answer) {
+function checkAnswer(e) {
+    var usersAnswer = e.target;
+    if (usersAnswer.matches("li")) {
+        var result = document.createElement("div");
+        result.setAttribute("id", "result");
+        if (usersAnswer.textContent == questions[questionIndex].correctAnswer) {
             score++;
-            createDiv.textContent = "Correct!";
-            // Correct condition 
+            result.textContent = "Correct!";
         } else {
-            // Will deduct -10 seconds off secondsLeft for wrong answers
             remainingTime = remainingTime - penalty;
-            createDiv.textContent = "Wrong!"
+            result.textContent = "Wrong!"
         }
-        // Question Index determines number question user is on
-        questionIndex++;
-
-        if (questionIndex >= questions.length) {
-            // All done will append last page with user stats
-            allDone();
-            createDiv.textContent = "You got  " + score + "/" + questions.length + " Correct!";
-        } else {
-            render(questionIndex);
-        }
-        questionsDiv.appendChild(createDiv);
-
     }
+    questionIndex++;
+    if (questionIndex >= questions.length) {
+        endQuiz();
+        result.textContent = "Number of  correct answer is  " + score;
+    } else { showQuestions(questionIndex); }
+    startPage.appendChild(result);
+}
+
+
+
+function endQuiz() {
+    startPage.innerHTML = "";
+    // currentTime.innerHTML = "";
+
+    // Heading:
+    var allDoneEl = document.createElement("h1");
+    allDoneEl.setAttribute("id", "allDone");
+    allDoneEl.textContent = "All Done!"
+    startPage.appendChild(allDoneEl);
+
+    // Paragraph
+    var h3El = document.createElement("p");
+    h3El.setAttribute("id", "h3El");
+    startPage.appendChild(h3El);
+
+    // Calculates time remaining and replaces it with score
+    if (remainingTime >= 0) {
+        // var timeRemaining = remainingTime;
+        var h3El = document.createElement("p");
+        clearInterval(interval);
+        h3El.textContent = "Your final score is: " + remainingTime + score;
+        startPage.appendChild(h3El);
+    }
+
+    // Label
+    var labelEl = document.createElement("label");
+    labelEl.setAttribute("id", "labelEl");
+    labelEl.textContent = "Enter your initials: ";
+    startPage.appendChild(labelEl);
+
+    // input
+    var inputEl = document.createElement("input");
+    inputEl.setAttribute("type", "text");
+    inputEl.setAttribute("id", "initials");
+    inputEl.textContent = "";
+    startPage.appendChild(inputEl);
+
+    // submit
+    var submitBtn = document.createElement("button");
+    submitBtn.setAttribute("type", "submit");
+    submitBtn.setAttribute("id", "Submit");
+    submitBtn.textContent = "Submit";
+    startPage.appendChild(submitBtn);
+
+    // Event listener to capture initials and local storage for initials and score
+    submitBtn.addEventListener("click", function () {
+        var initials = inputEl.value;
+
+        if (initials === null) {
+            console.log("No value entered!");
+        } else {
+            var finalScore = {
+                initials: initials,
+                highscore: finalScore
+            }
+            console.log(finalScore);
+            var allScores = localStorage.getItem("allScores");
+            if (allScores === null) {
+                allScores = [];
+            } else {
+                allScores = JSON.parse(allScores);
+            }
+            allScores.push(finalScore);
+            var lastScore = JSON.stringify(allScores);
+            localStorage.setItem("allScores", lastScore);
+            // Travels to final page
+            window.location.replace("highscore.html");
+        }
+    });
+
+}
