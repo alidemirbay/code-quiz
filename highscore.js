@@ -2,23 +2,23 @@ var highScore = document.querySelector("#highScore");
 var clear = document.querySelector("#clear");
 var goBack = document.querySelector("#goBack");
 
-// Event listener to clear scores 
+// clear local storage
 clear.addEventListener("click", function () {
     localStorage.clear();
     location.reload();
 });
-// Retreives local stroage 
-var allScores = localStorage.getItem("allScores");
-allScores = JSON.parse(allScores);
+// get local storage
+var highScores = localStorage.getItem("highScores");
+highScores = JSON.parse(highScores);
 
-if (allScores !== null) {
-    for (var i = 0; i < allScores.length; i++) {
+if (highScores !== null) {
+    for (var i = 0; i < highScores.length; i++) {
         var liEl = document.createElement("li");
-        liEl.textContent = allScores[i].initials + " " + allScores[i].score;
+        liEl.textContent = highScores[i].initials + ": " + highScores[i].score;
         highScore.appendChild(liEl);
     }
 }
-// Event listener to move to index page
+// goes to start page
 goBack.addEventListener("click", function () {
     window.location.replace("index.html");
 });
