@@ -38,7 +38,7 @@ https://alidemirbay.github.io/Web-CodeQuiz/
 
 ## Screenshots of the application
 
-![screenshot1](images/1)
-![screenshot2](images/2)
-![screenshot3](images/3)
-![screenshot4](images/4)
+![screenshot1](images/1.png)
+![screenshot2](images/2.png)
+![screenshot3](images/3.png)
+![screenshot4](images/4.png)
