@@ -7,7 +7,7 @@ clear.addEventListener("click", function () {
     localStorage.clear();
     location.reload();
 });
-// get local storage
+// get data from local storage 
 var highScores = localStorage.getItem("highScores");
 highScores = JSON.parse(highScores);
 

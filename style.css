@@ -8,6 +8,17 @@ body {
   width: 600px;
   height: 600px;
 }
+nav {
+  display: flex;
+  justify-content: space-between;
+}
+nav a {
+  width: 200px;
+}
+nav div {
+  width: 200px;
+  justify-content: flex-end;
+}
 
 #startPage {
   margin: 20px;
