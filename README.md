@@ -34,7 +34,7 @@ THEN the saved events persist
 
 ## Link to the website:
 
-https://alidemirbay.github.io/Web-CodeQuiz/
+https://alidemirbay.github.io/code-quiz
 
 ## Screenshots of the application
 
